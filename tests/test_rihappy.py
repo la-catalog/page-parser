@@ -13,7 +13,8 @@ class TestRihappy(TestCase):
 
         for file in Path("tests/rihappy").iterdir():
             text = file.read_text()
-            parser.parse(text, "", "rihappy")
+            url = f"https://www.rihappy.com.br/{file.name}/p"
+            list(parser.parse(text=text, url=url, marketplace="rihappy"))
 
 
 if __name__ == "__main__":

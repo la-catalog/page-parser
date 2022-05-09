@@ -1,6 +1,7 @@
 from collections.abc import Generator
 
 from page_sku import SKU
+from structlog.stdlib import BoundLogger
 
 
 class Marketplace:
@@ -8,7 +9,8 @@ class Marketplace:
     Base class for the marketplaces classes.
     """
 
-    def __init__(self, logger) -> None:
+    def __init__(self, marketplace: str, logger: BoundLogger) -> None:
+        self._marketplace = marketplace
         self._logger = logger
 
     def parse(self, text: str, url: str) -> Generator[list[SKU], tuple[str, str], None]:

@@ -1,12 +1,11 @@
 import json
 import re
 from collections.abc import Generator
+from urllib.parse import urljoin
 
-from babel.numbers import parse_decimal
 from la_deep_get import dget
 from page_sku import SKU, Attribute, Price
 from parsel import Selector, SelectorList
-from url_parser import Parser as UrlParser
 
 from page_parser.abstractions import Marketplace
 
@@ -15,10 +14,6 @@ class Rihappy(Marketplace):
     """
     Base class for the marketplaces classes.
     """
-
-    def __init__(self, logger) -> None:
-        self._logger = logger
-        self._url_parser = UrlParser(logger)
 
     def parse(self, text: str, url: str) -> Generator[list[SKU], tuple[str, str], None]:
         selector = Selector(text=text)
@@ -30,8 +25,8 @@ class Rihappy(Marketplace):
         product = dget(list(json_.keys()), 0)
         product = json_.get(product, {})
 
-        name = product.get("productName")
         code = product.get("productId")
+        name = product.get("productName")
         brand = product.get("brand")
         description = product.get("description")
 
@@ -68,11 +63,16 @@ class Rihappy(Marketplace):
             for attribute in attributes
         ]
 
-        print(name)
-        print(code)
-        print(brand)
-        print(description)
-        print(segments)
-        print(currency)
-        print(prices)
-        print(attributes)
+        sku = SKU(
+            code=code,
+            name=name,
+            brand=brand,
+            description=description,
+            prices=prices,
+            segments=segments,
+            attributes=attributes,
+            sources=[url],
+            marketplace=self._marketplace,
+        )
+
+        yield sku
