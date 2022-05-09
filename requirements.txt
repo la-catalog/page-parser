@@ -1,14 +1,18 @@
+Babel==2.10.1
 bson==0.5.10
 cssselect==1.1.0
 gtin==1.3.1631641032
 la-catch==0.0.3
+la-deep-get==0.0.3
 lxml==4.8.0
--e git+https://github.com/thiagola92/page-parser.git@faf35c86af091a1d0b48252003831d7a89143865#egg=page_parser
+-e git+https://github.com/thiagola92/page-parser.git@034a4a1f4f5fd46644b155eb14a0f74c503a391e#egg=page_parser
 page-sku==0.0.1
 parsel==1.6.0
 pydantic==1.9.0
 python-dateutil==2.8.2
+pytz==2022.1
 six==1.16.0
 structlog==21.5.0
 typing_extensions==4.2.0
+url-parser==0.0.1
 w3lib==1.22.0
