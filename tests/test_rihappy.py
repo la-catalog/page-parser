@@ -14,7 +14,10 @@ class TestRihappy(TestCase):
         for file in Path("tests/rihappy").iterdir():
             text = file.read_text()
             url = f"https://www.rihappy.com.br/{file.name}/p"
-            list(parser.parse(text=text, url=url, marketplace="rihappy"))
+            values = parser.parse(text=text, url=url, marketplace="rihappy")
+
+            for value in values:
+                print(value)
 
 
 if __name__ == "__main__":

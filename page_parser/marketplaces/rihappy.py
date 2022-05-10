@@ -1,11 +1,11 @@
 import json
 import re
 from collections.abc import Generator
-from urllib.parse import urljoin
 
 from la_deep_get import dget
 from page_sku import SKU, Attribute, Price
-from parsel import Selector, SelectorList
+from parsel import Selector
+from pydantic import AnyHttpUrl
 
 from page_parser.abstractions import Marketplace
 
@@ -15,7 +15,9 @@ class Rihappy(Marketplace):
     Base class for the marketplaces classes.
     """
 
-    def parse(self, text: str, url: str) -> Generator[list[SKU], tuple[str, str], None]:
+    def parse(
+        self, text: str, url: AnyHttpUrl
+    ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
         selector = Selector(text=text)
 
         json_ = selector.xpath(
@@ -63,7 +65,7 @@ class Rihappy(Marketplace):
             for attribute in attributes
         ]
 
-        sku = SKU(
+        yield SKU(
             code=code,
             name=name,
             brand=brand,
@@ -74,5 +76,3 @@ class Rihappy(Marketplace):
             sources=[url],
             marketplace=self._marketplace,
         )
-
-        yield sku

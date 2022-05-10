@@ -1,6 +1,7 @@
 from collections.abc import Generator
 
 from page_sku import SKU
+from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
 
 
@@ -13,11 +14,14 @@ class Marketplace:
         self._marketplace = marketplace
         self._logger = logger
 
-    def parse(self, text: str, url: str) -> Generator[list[SKU], tuple[str, str], None]:
+    def parse(
+        self, text: str, url: AnyHttpUrl
+    ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
         """
-        Parse the text to obtain all information from it.
-        When parsing more than one text is needed,
-        you can use coroutine `send()` to pass more texts.
+        Parse the text (HTML/JSON) to obtain informations from it.
+
+        In case parsing one text isn't enough to obtain the complete information,
+        it's possible to yield an URL and wait for this generators receive the `send()`.
         """
 
-        _ = yield None
+        return
