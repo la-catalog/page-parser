@@ -1,6 +1,7 @@
 from collections.abc import Generator
 
 from page_sku import SKU
+from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger, get_logger
 
 from page_parser.options import get_marketplace_parser
@@ -8,7 +9,7 @@ from page_parser.options import get_marketplace_parser
 
 class Parser:
     """
-    TODO
+    Parser is responsible for extracting informations from text (HTML/JSON).
     """
 
     def __init__(self, logger: BoundLogger = get_logger()) -> None:
@@ -25,8 +26,8 @@ class Parser:
 
     def parse(
         self, text: str, url: str, marketplace: str
-    ) -> Generator[list[SKU], tuple[str, str], None]:
-        """TODO"""
+    ) -> Generator[SKU | AnyHttpUrl, tuple[str, str], None]:
+        """Call the parse function from the respective marketplace"""
 
         parser = get_marketplace_parser(marketplace=marketplace, logger=self._logger)
         return parser.parse(text=text, url=url)
