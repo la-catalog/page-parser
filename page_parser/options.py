@@ -2,10 +2,12 @@ from structlog.stdlib import BoundLogger
 
 from page_parser.abstractions import Marketplace
 from page_parser.exceptions import UnknowMarketplaceError
+from page_parser.marketplaces.amazon import Amazon
 from page_parser.marketplaces.rihappy import Rihappy
 
 options: dict[str, type[Marketplace]] = {
     "rihappy": Rihappy,
+    "amazon": Amazon,
 }
 
 

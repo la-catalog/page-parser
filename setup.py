@@ -26,6 +26,7 @@ setup(
         "parsel==1.6.0",
         "page-sku==0.0.1",
         "la-catch==0.0.3",
+        "pyjson5==1.6.1",
     ],
     python_requires=">=3.10",
 )

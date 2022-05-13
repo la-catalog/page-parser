@@ -1,5 +1,4 @@
 import json
-import re
 from collections.abc import Generator
 
 from la_deep_get import dget
@@ -11,10 +10,6 @@ from page_parser.abstractions import Marketplace
 
 
 class Rihappy(Marketplace):
-    """
-    Base class for the marketplaces classes.
-    """
-
     def parse(
         self, text: str, url: AnyHttpUrl
     ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
@@ -24,18 +19,18 @@ class Rihappy(Marketplace):
             "//template[@data-varname='__STATE__']/script/text()"
         ).get("{}")
         json_: dict = json.loads(json_)
-        product = dget(list(json_.keys()), 0)
-        product = json_.get(product, {})
+        first_key = dget(list(json_.keys()), 0)
+        product = json_.get(first_key, {})
 
         code = product.get("productId")
         name = product.get("productName")
         brand = product.get("brand")
         description = product.get("description")
 
-        segments: list[str] = dget(product, "categories", "json") or []
-        segments: str = dget(segments, 0, default="")
-        segments: list[str] = segments.split("/")
-        segments = [segment for segment in segments if segment]
+        segments = dget(product, "categories", "json") or []
+        segments_together: str = dget(segments, 0, default="")
+        segments = segments_together.split("/")
+        segments = [s for s in segments if s]
 
         currency = selector.xpath(
             "//span[contains(@class, 'vtex-product-price-1-x-currencyCode')]/text()"
@@ -43,26 +38,24 @@ class Rihappy(Marketplace):
 
         prices: str = dget(product, "priceRange", "id")
         prices: dict = json_.get(prices, {})
-        prices: list[str] = [dget(value, "id") for value in prices.values()]
+        prices: list[str] = [dget(v, "id") for v in prices.values()]
         prices_high: list[float] = [dget(json_, id_, "highPrice") for id_ in prices]
         prices_low: list[float] = [dget(json_, id_, "lowPrice") for id_ in prices]
         prices: set[str] = set(prices_high + prices_low)
-        prices: set[str] = set(price for price in prices if price)
-        prices: list[Price] = [
-            Price(amount=price, currency=currency) for price in prices
-        ]
+        prices: set[str] = set(p for p in prices if p)
+        prices: list[Price] = [Price(amount=p, currency=currency) for p in prices]
 
         attributes: list = dget(product, "specificationGroups", default=[])
         attributes: str = dget(attributes, -1, "id")
         attributes: list[dict] = dget(json_, attributes, "specifications", default=[])
-        attributes: list[str] = [attribute.get("id") for attribute in attributes]
-        attributes: list[dict] = [json_.get(attribute) for attribute in attributes]
+        attributes: list[str] = [a.get("id") for a in attributes]
+        attributes: list[dict] = [json_.get(a) for a in attributes]
         attributes: list[Attribute] = [
             Attribute(
-                name=attribute.get("name"),
-                value=". ".join(dget(attribute, "values", "json", default=[])),
+                name=a.get("name"),
+                value=". ".join(dget(a, "values", "json", default=[])),
             )
-            for attribute in attributes
+            for a in attributes
         ]
 
         yield SKU(

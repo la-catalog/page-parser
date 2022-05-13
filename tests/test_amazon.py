@@ -6,14 +6,14 @@ from unittest import TestCase
 from page_parser.parser import Parser
 
 
-class TestRihappy(TestCase):
+class TestAmazon(TestCase):
     def test_parse(self) -> None:
         parser = Parser()
 
-        for file in Path("tests/rihappy").iterdir():
+        for file in Path("tests/amazon").iterdir():
             text = file.read_text()
-            url = f"https://www.rihappy.com.br/{file.stem}/p"
-            items = parser.parse(text=text, url=url, marketplace="rihappy")
+            url = f"https://www.amazon.com.br/dp/{file.stem}"
+            items = parser.parse(text=text, url=url, marketplace="amazon")
 
             for item in items:
                 pprint(item.dict())
