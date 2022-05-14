@@ -102,7 +102,9 @@ class Amazon(Marketplace):
         segments = [s for s in segments if s]
         segments = [s for s in segments if s != "›"]
 
-        if "Voltar aos resultados" in segments:
+        # Quando é um resultado de busca os segmentos não aparecem,
+        # em vez disso tem um "‹ Voltar aos resultados"
+        if "‹" in segments:
             segments = []
 
         ###### ATTRIBUTES
