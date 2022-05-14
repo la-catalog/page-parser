@@ -25,6 +25,12 @@ class Amazon(Marketplace):
         code = url_parsed.code
         name = selector.xpath("//span[@id='productTitle']//text()").get()
 
+        ###### BRAND
+
+        brand: str = selector.xpath("//a[@id='bylineInfo']/text()").get(default="")
+        brand = brand.replace("Visite a loja ", "")
+        brand = brand.replace("Marca: ", "")
+
         ###### DESCRIPTION
 
         description_1 = selector.xpath(
@@ -147,6 +153,27 @@ class Amazon(Marketplace):
             attribute_3 = Attribute(name=attribute_3_th, value=attribute_3_td)
             attributes.append(attribute_3)
 
+        attributes_4_tr = selector.xpath(
+            "//table[@id='technicalSpecifications_section_1']//tr"
+        )
+        for attribute_4_tr in attributes_4_tr:
+            attribute_4_tr: SelectorList
+            attribute_4_th = attribute_4_tr.xpath(".//th/text()").get()
+            attribute_4_td = attribute_4_tr.xpath(".//td/text()").get()
+            attribute_4 = Attribute(name=attribute_4_th, value=attribute_4_td)
+            attributes.append(attribute_4)
+
+        attributes_5_li = selector.xpath("//div[@id='detailBullets_feature_div']//li")
+        for attribute_5_li in attributes_5_li:
+            attribute_5_li: SelectorList
+            attribute_5_span = attribute_5_li.xpath(".//span/span/text()").getall()
+            attribute_5_name: str = attribute_5_span[0]
+            attribute_5_name = attribute_5_name.partition(":")[0]
+            attribute_5_name = attribute_5_name.partition("\n")[0]
+            attribute_5_value: str = attribute_5_span[1]
+            attribute_5 = Attribute(name=attribute_5_name, value=attribute_5_value)
+            attributes.append(attribute_5)
+
         ###### IMAGES
 
         images = []
@@ -172,6 +199,29 @@ class Amazon(Marketplace):
                     image_url = re.sub(r"[0-9]+_\.jpg", "9999_.jpg", image_url)
                     images.append(image_url)
                     break  # no need to get all sizes from same image
+
+        ###### VIDEOS
+
+        videos = []
+
+        videos_scripts = [s for s in scripts if "jQuery.parseJSON('{\"dataInJson" in s]
+        videos_scripts = [s.split("jQuery.parseJSON('")[1] for s in videos_scripts]
+        videos_scripts = [
+            s.split('data["alwaysIncludeVideo"]')[0] for s in videos_scripts
+        ]
+        videos_scripts = [s.strip() for s in videos_scripts]
+
+        for videos_script in videos_scripts:
+            if videos_script.endswith("');"):
+                videos_script = videos_script[:-3]
+
+            videos_json: dict = json.loads(videos_script)
+            videos_list: list[dict] = videos_json.get("videos", [])
+            videos_urls = [v.get("url") for v in videos_list]
+            videos_urls = [v for v in videos_urls if v]
+
+            for video_url in videos_urls:
+                videos.append(video_url)
 
         ###### VARIATIONS
 
@@ -228,11 +278,13 @@ class Amazon(Marketplace):
         yield SKU(
             code=code,
             name=name,
+            brand=brand,
             description=description,
             prices=prices,
             segments=segments,
             attributes=attributes,
             images=images,
+            videos=videos,
             variations=variations,
             sources=[url],
             marketplace=self._marketplace,

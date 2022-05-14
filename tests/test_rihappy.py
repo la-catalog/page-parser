@@ -7,13 +7,18 @@ from page_parser.parser import Parser
 
 
 class TestRihappy(TestCase):
-    def test_parse(self) -> None:
-        parser = Parser()
+    def setUp(self) -> None:
+        self.parser = Parser()
+        self.marketplace = "rihappy"
+        self.url = "https://www.rihappy.com.br/{0}/p"
 
-        for file in Path("tests/rihappy").iterdir():
+        return super().setUp()
+
+    def test_parse(self) -> None:
+        for file in Path(f"tests/{self.marketplace}").iterdir():
             text = file.read_text()
-            url = f"https://www.rihappy.com.br/{file.stem}/p"
-            items = parser.parse(text=text, url=url, marketplace="rihappy")
+            url = self.url.format(file.stem)
+            items = self.parser.parse(text=text, url=url, marketplace=self.marketplace)
 
             for item in items:
                 pprint(item.dict())
