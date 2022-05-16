@@ -57,6 +57,13 @@ class Amazon(Marketplace):
         ).get(default="")
         descriptions.append(description_4)
 
+        description_5_div: SelectorList = selector.xpath("//div[@id='aplus']/div")
+        description_5_div.xpath(".//style").remove()
+        description_5_div.xpath(".//script").remove()
+        description_5_div.xpath(".//a[@href='javascript:void(0)']").remove()
+        description_5: list[str] = description_5_div.xpath(".//text()").getall()
+        descriptions.extend(description_5)
+
         descriptions = [d.strip() for d in descriptions]
         descriptions = [d for d in descriptions if d]
         description = "\n".join(descriptions) or None
