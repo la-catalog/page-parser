@@ -27,10 +27,14 @@ class Rihappy(Marketplace):
         brand = product.get("brand")
         description = product.get("description")
 
+        ###### SEGMENTS
+
         segments = dget(product, "categories", "json") or []
         segments_together: str = dget(segments, 0, default="")
         segments = segments_together.split("/")
         segments = [s for s in segments if s]
+
+        ###### PRICES
 
         currency = selector.xpath(
             "//span[contains(@class, 'vtex-product-price-1-x-currencyCode')]/text()"
@@ -44,6 +48,8 @@ class Rihappy(Marketplace):
         prices: set[str] = set(prices_high + prices_low)
         prices: set[str] = set(p for p in prices if p)
         prices: list[Price] = [Price(amount=p, currency=currency) for p in prices]
+
+        ###### ATTRIBUTES
 
         attributes: list = dget(product, "specificationGroups", default=[])
         attributes: str = dget(attributes, -1, "id")
