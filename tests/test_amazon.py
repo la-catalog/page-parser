@@ -25,7 +25,7 @@ class TestAmazon(TestCase):
         print()
 
     def test_parse_1(self) -> None:
-        filename = "B09YRKYRSM.html"
+        filename = "8565042472.html"
         file = Path(f"tests/{self.marketplace}/{filename}")
         text = file.read_text()
         url = self.url.format(file.stem)

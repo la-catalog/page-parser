@@ -27,24 +27,39 @@ class Amazon(Marketplace):
 
         ###### BRAND
 
-        brand: str = selector.xpath("//a[@id='bylineInfo']/text()").get(default="")
-        brand = brand.replace("Visite a loja ", "")
-        brand = brand.replace("Marca: ", "")
+        brand: str | None = selector.xpath("//a[@id='bylineInfo']/text()").get()
+
+        if brand:
+            brand = brand.replace("Visite a loja ", "")
+            brand = brand.replace("Marca: ", "")
 
         ###### DESCRIPTION
+
+        descriptions: list[str] = []
 
         description_1 = selector.xpath(
             "//div[@id='productDescription']//span/text()"
         ).get(default="")
+        descriptions.append(description_1)
 
-        description_2_bullets: list[str] = selector.xpath(
+        description_2: list[str] = selector.xpath(
             "//div[@id='feature-bullets']//span/text()"
         ).getall()
-        description_2_bullets = [d.strip() for d in description_2_bullets]
-        description_2_bullets = [d for d in description_2_bullets if d]
-        description_2 = "\n".join(description_2_bullets)
+        descriptions.extend(description_2)
 
-        description = "\n".join([description_1, description_2])
+        description_3: str = selector.xpath(
+            "//div[@data-a-expander-name='book_description_expander']/div/span/text()"
+        ).get(default="")
+        descriptions.append(description_3)
+
+        description_4: str = selector.xpath(
+            "//div[@id='editorialReviews_feature_div']/div[2]//div//span/text()"
+        ).get(default="")
+        descriptions.append(description_4)
+
+        descriptions = [d.strip() for d in descriptions]
+        descriptions = [d for d in descriptions if d]
+        description = "\n".join(descriptions) or None
 
         ###### PRICE
 
@@ -168,7 +183,15 @@ class Amazon(Marketplace):
         attributes_5_li = selector.xpath("//div[@id='detailBullets_feature_div']//li")
         for attribute_5_li in attributes_5_li:
             attribute_5_li: SelectorList
-            attribute_5_span = attribute_5_li.xpath(".//span/span/text()").getall()
+            attribute_5_span: list[str] = attribute_5_li.xpath(
+                ".//span/span/text()"
+            ).getall()
+            attribute_5_span = [a.strip() for a in attribute_5_span]
+            attribute_5_span = [a for a in attribute_5_span if a]
+
+            if len(attribute_5_span) < 2:
+                continue
+
             attribute_5_name: str = attribute_5_span[0]
             attribute_5_name = attribute_5_name.partition(":")[0]
             attribute_5_name = attribute_5_name.partition("\n")[0]
@@ -183,24 +206,48 @@ class Amazon(Marketplace):
         scripts: list[str] = selector.xpath(
             "//script[@type='text/javascript']"
         ).getall()
-        images_scripts = [s for s in scripts if "'colorImages': " in s]
-        images_scripts = [s.split("'colorImages':")[1] for s in images_scripts]
-        images_scripts = [s.split("'colorToAsin':")[0] for s in images_scripts]
-        images_scripts = [s.strip() for s in images_scripts]
 
-        for images_script in images_scripts:
-            if images_script[-1] == ",":
-                images_script = images_script[:-1]
+        images_1_scripts = [s for s in scripts if "'colorImages': " in s]
+        images_1_scripts = [s.split("'colorImages':")[1] for s in images_1_scripts]
+        images_1_scripts = [s.split("'colorToAsin':")[0] for s in images_1_scripts]
+        images_1_scripts = [s.strip() for s in images_1_scripts]
 
-            images_js: dict = pyjson5.loads(images_script)
-            images_ini: list[dict] = [i for i in dget(images_js, "initial", default=[])]
-            images_main: list[dict] = [i.get("main", {}) for i in images_ini]
+        for images_1_script in images_1_scripts:
+            if images_1_script.endswith(","):
+                images_1_script = images_1_script[:-1]
 
-            for image_main in images_main:
-                for image_url in image_main:
-                    image_url = re.sub(r"[0-9]+_\.jpg", "9999_.jpg", image_url)
-                    images.append(image_url)
-                    break  # no need to get all sizes from same image
+            images_1_js: dict = pyjson5.loads(images_1_script)
+            images_1_ini: list[dict] = [
+                i for i in dget(images_1_js, "initial", default=[])
+            ]
+            images_1_main: list[dict] = [i.get("main", {}) for i in images_1_ini]
+
+            for image_1_main in images_1_main:
+                for image_1_url in image_1_main:
+                    # The url last number is the size
+                    # and it's customizable
+                    image_1_url = re.sub(r"[0-9]+_\.jpg", "9999_.jpg", image_1_url)
+                    images.append(image_1_url)
+
+                    break  # No need to get all sizes from same image
+
+        images_2_scripts = [s for s in scripts if "'imageGalleryData'" in s]
+        images_2_scripts = [
+            s.split("'imageGalleryData' :")[1] for s in images_2_scripts
+        ]
+        images_2_scripts = [s.split("'centerColMargin'")[0] for s in images_2_scripts]
+        images_2_scripts = [s.strip() for s in images_2_scripts]
+
+        for images_2_script in images_2_scripts:
+            if images_2_script.endswith(","):
+                images_2_script = images_2_script[:-1]
+
+            images_2_json: list[dict] = pyjson5.loads(images_2_script)
+            images_2_json = [i.get("mainUrl") for i in images_2_json]
+            images_2_json = [i for i in images_2_json if i]
+
+            for image_2_url in images_2_json:
+                images.append(image_2_url)
 
         ###### VIDEOS
 
