@@ -14,14 +14,14 @@ from url_parser import Parser as UrlParser
 from page_parser.abstractions import Marketplace
 
 
-class Amazon(Marketplace):
+class AmazonPT(Marketplace):
     def __init__(self, marketplace: str, logger: BoundLogger) -> None:
         super().__init__(marketplace, logger)
 
         self._locale = "pt_BR"
 
         # TODO: create a package to build urls to marketplaces
-        self._base_url = "https://www.amazon.com.br/dp/{0}"
+        self._base_url = "https://www.amazon.es/-/pt/dp/{0}"
 
     def parse(
         self, text: str, url: AnyHttpUrl
