@@ -5,7 +5,7 @@ from collections.abc import Generator
 import pyjson5
 from babel.numbers import parse_decimal
 from la_deep_get import dget
-from page_sku import SKU, Attribute, Price
+from page_sku import SKU, Attribute, Price, Rating
 from parsel import Selector, SelectorList
 from pydantic import AnyHttpUrl
 from url_parser import Parser as UrlParser
@@ -199,6 +199,20 @@ class Amazon(Marketplace):
             attribute_5 = Attribute(name=attribute_5_name, value=attribute_5_value)
             attributes.append(attribute_5)
 
+        ###### RATING
+
+        rating = Rating(min=1, max=5)
+
+        rating_span: str = selector.xpath(
+            "//span[@data-hook='rating-out-of-text']/text()"
+        ).get(default="")
+
+        if " de 5" in rating_span:
+            rating_span = rating_span.partition(" de 5")[0]
+            rating_span = rating_span.strip()
+            rating_current = parse_decimal(rating_span, locale="pt_BR")
+            rating.curent = rating_current
+
         ###### IMAGES
 
         images = []
@@ -332,6 +346,7 @@ class Amazon(Marketplace):
             prices=prices,
             segments=segments,
             attributes=attributes,
+            rating=rating,
             images=images,
             videos=videos,
             variations=variations,

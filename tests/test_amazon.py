@@ -24,7 +24,7 @@ class TestAmazon(TestCase):
                 pprint(item.dict())
         print()
 
-    def test_parse_1(self) -> None:
+    def test_parse_one(self) -> None:
         filename = "8565042472.html"
         file = Path(f"tests/{self.marketplace}/{filename}")
         text = file.read_text()
