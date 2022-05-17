@@ -1,5 +1,6 @@
 import json
 from collections.abc import Generator
+from email.policy import default
 
 from babel.numbers import parse_decimal
 from la_deep_get import dget
@@ -18,13 +19,25 @@ class MercadoLivre(Marketplace):
 
         name = json_.get("title")
 
-        ###### PRICE
+        ###### DESCRIPTION
+
+        description = None
+
+        description_endpoint = "https://api.mercadolibre.com/items/{0}/description"
+        description_url = description_endpoint.format(json_["id"])
+        description_text = yield AnyHttpUrl(description_url)
+
+        if description_text:
+            description_json: dict = json.loads(description_text)
+            description = description_json.get("plain_text")
+
+        ###### PRICES
 
         prices = []
 
         if currency_id := json_.get("currency_id"):
-            currency_url = "https://api.mercadolibre.com/currencies/{0}"
-            currency_url = currency_url.format(currency_id)
+            currency_endpoint = "https://api.mercadolibre.com/currencies/{0}"
+            currency_url = currency_endpoint.format(currency_id)
             currency_text = yield AnyHttpUrl(url=currency_url)
 
             if currency_text:
@@ -38,6 +51,23 @@ class MercadoLivre(Marketplace):
 
                 if price_2:
                     prices.append(Price(amount=price_2, currency=currency))
+
+        ###### SEGMENTS
+
+        segments = []
+
+        if category_id := json_.get("category_id"):
+            category_endpoint = "https://api.mercadolibre.com/categories/{0}"
+            category_url = category_endpoint.format(category_id)
+            category_text = yield AnyHttpUrl(category_url)
+
+            if category_text:
+                category_json: dict = json.loads(category_text)
+
+                for category_path in category_json.get("path_from_root", []):
+                    segments.append(category_path.get("name"))
+
+        segments = [s for s in segments if s]
 
         ###### ATTRIBUTES
 
@@ -72,3 +102,37 @@ class MercadoLivre(Marketplace):
 
             if package_height := dget(package_LWH, 2):
                 package.height = parse_decimal(package_height)
+
+        ###### IMAGES
+
+        images = []
+        picture_endpoint = "https://api.mercadolibre.com/pictures/{0}"
+
+        for picture in json_.get("pictures", default=[]):
+            picture_url = picture_endpoint.format(picture["id"])
+            picture_text = yield AnyHttpUrl(picture_url)
+
+            if picture_text:
+                picture_json: dict = json.loads(picture_text)
+                picture_biggest: str = picture_json.get("max_size")
+                picture_variations: list = picture_json.get("variations", [])
+
+                for picture_variation in picture_variations:
+                    picture_variation: dict[str, str]
+
+                    if picture_variation.get("size") == picture_biggest:
+                        images.append(picture_variation.get("url"))
+                        break
+
+        images = [i for i in images if i]
+
+        yield SKU(
+            name=name,
+            description=description,
+            attributes=attributes,
+            prices=prices,
+            segments=segments,
+            attributes=attributes,
+            package=package,
+            images=images,
+        )
