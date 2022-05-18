@@ -5,7 +5,7 @@ gtin==1.3.1631641032
 la-catch==0.0.3
 la-deep-get==0.0.3
 lxml==4.8.0
--e git+https://github.com/thiagola92/page-parser.git@0ba8f1a26b433b0eadf0af8b69d9fb8b4c7bac4f#egg=page_parser
+-e git+https://github.com/thiagola92/page-parser.git@c7a36406e6dae098a4226a326c2b8d05b4c3cce0#egg=page_parser
 page-sku==0.0.1
 parsel==1.6.0
 pydantic==1.9.0

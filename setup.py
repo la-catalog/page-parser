@@ -27,6 +27,7 @@ setup(
         "page-sku==0.0.1",
         "la-catch==0.0.3",
         "pyjson5==1.6.1",
+        "Babel==2.10.1",
     ],
     python_requires=">=3.10",
 )
