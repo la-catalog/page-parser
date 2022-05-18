@@ -29,6 +29,7 @@ setup(
         "parsel==1.6.0",
         "pyjson5==1.6.1",
         "structlog==21.5.0",
+        "url-parser==0.0.1",
     ],
     python_requires=">=3.10",
 )
