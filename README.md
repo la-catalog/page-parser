@@ -24,7 +24,7 @@ html = Path("page.html").read_text()
 url = "https://www.google.com/shopping/product/r/BR/16567145044483249038"
 items = parser.parse(text=html, url=url)
 
-for item in  items:
+for item in items:
     if isinstance(item, AnyHttpUrl):
         print(f"url: {item}")
     elif isinstance(item, SKU):
@@ -48,7 +48,7 @@ url = "https://www.google.com/shopping/product/r/BR/16567145044483249038"
 url2 = "https://www.google.com/shopping/product/r/BR/16567145044483249038/specs?prds=rj:1,rsk:PC_11142543734639733720"
 items = parser.parse(text=html, url=url)
 
-for item in  items:
+for item in items:
     if isinstance(item, AnyHttpUrl):
         print(f"url: {item}")
     elif isinstance(item, SKU):
