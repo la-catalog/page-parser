@@ -19,7 +19,7 @@ class Rihappy(Marketplace):
             "//template[@data-varname='__STATE__']/script/text()"
         ).get("{}")
         json_: dict = json.loads(json_)
-        first_key = dget(list(json_.keys()), 0)
+        first_key = next(iter(json_), {})
         product = json_.get(first_key, {})
 
         code = product.get("productId")
@@ -64,6 +64,13 @@ class Rihappy(Marketplace):
             for a in attributes
         ]
 
+        ###### IMAGES
+
+        images_first_item = dget(product, "items", 0, "id")
+        images_item: list[dict] = dget(json_, images_first_item, "images", default=[])
+        images_ids = [i.get("id") for i in images_item]
+        images = [dget(json_, i, "imageUrl") for i in images_ids]
+
         yield SKU(
             code=code,
             name=name,
@@ -74,4 +81,5 @@ class Rihappy(Marketplace):
             attributes=attributes,
             sources=[url],
             marketplace=self._marketplace,
+            images=images,
         )
