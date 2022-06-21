@@ -2,7 +2,7 @@ import json
 from collections.abc import Generator
 
 from la_deep_get import dget
-from page_sku import SKU, Attribute, Price
+from page_models import SKU, Attribute, Price
 from parsel import Selector
 from pydantic import AnyHttpUrl
 

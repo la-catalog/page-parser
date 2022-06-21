@@ -1,6 +1,6 @@
 from collections.abc import Generator
 
-from page_sku import SKU
+from page_models import SKU
 from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
 

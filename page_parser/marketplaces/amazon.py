@@ -5,7 +5,7 @@ from collections.abc import Generator
 import pyjson5
 from babel.numbers import parse_decimal
 from la_deep_get import dget
-from page_sku import SKU, Attribute, Price, Rating
+from page_models import SKU, Attribute, Price, Rating
 from parsel import Selector, SelectorList
 from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger

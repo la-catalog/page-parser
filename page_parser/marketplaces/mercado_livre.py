@@ -4,7 +4,7 @@ from email.policy import default
 
 from babel.numbers import parse_decimal
 from la_deep_get import dget
-from page_sku import SKU, Attribute, Measurement, Price
+from page_models import SKU, Attribute, Measurement, Price
 from parsel import Selector
 from pydantic import AnyHttpUrl
 

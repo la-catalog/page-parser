@@ -25,7 +25,7 @@ setup(
         "Babel==2.10.1",
         "la-catch==0.0.3",
         "la-deep-get==0.0.3",
-        "page-sku==0.0.1",
+        "page-models==0.0.1",
         "parsel==1.6.0",
         "pyjson5==1.6.1",
         "structlog==21.5.0",

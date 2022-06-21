@@ -14,7 +14,7 @@ Deve se passar o texto que pode ser um HTML, JSON ou qualquer outra coisa desde 
 ```python
 from pathlib import Path
 
-from page_sku import SKU
+from page_models import SKU
 from pydantic import AnyHttpUrl
 
 from page_parser.parser import Parser
@@ -36,7 +36,7 @@ Nem sempre um texto é o suficiente para extrair o que deseja da página, mas co
 ```python
 from pathlib import Path
 
-from page_sku import SKU
+from page_models import SKU
 from pydantic import AnyHttpUrl
 
 from page_parser.parser import Parser
