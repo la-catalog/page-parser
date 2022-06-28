@@ -1,11 +1,9 @@
 import json
 from collections.abc import Generator
-from email.policy import default
 
 from babel.numbers import parse_decimal
 from la_deep_get import dget
 from page_models import SKU, Attribute, Measurement, Price
-from parsel import Selector
 from pydantic import AnyHttpUrl
 
 from page_parser.abstractions import Marketplace
