@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [project.urls]
-repository = "https://github.com/thiagola92/page-parser"
+repository = "https://github.com/la-catalog/page-parser"
 
 [tool.pdm]
 
