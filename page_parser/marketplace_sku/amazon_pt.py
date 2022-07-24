@@ -1,7 +1,7 @@
 from structlog.stdlib import BoundLogger
 
 from page_parser.abstractions import Marketplace
-from page_parser.marketplaces.amazon import Amazon
+from page_parser.marketplace_sku.amazon import Amazon
 
 
 class AmazonPT(Amazon):
