@@ -26,17 +26,6 @@ class TestAmazon(TestCase):
                 pprint(item.dict())
         print()
 
-    def test_parse_one(self) -> None:
-        filename = "B07ZCVN7YN.html"
-        file = Path(f"tests/{self.marketplace}/{filename}")
-        text = file.read_text()
-        url = self.url.format(file.stem)
-        items = self.parser.parse_sku(text=text, url=url, marketplace=self.marketplace)
-
-        for item in items:
-            pprint(item.dict())
-        print()
-
 
 if __name__ == "__main__":
     unittest.main()
