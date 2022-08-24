@@ -9,6 +9,7 @@ from page_models import SKU, Attribute, Metadata, Price, Rating
 from parsel import Selector, SelectorList
 from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
+from url_builder import Builder as UrlBuilder
 from url_parser import Parser as UrlParser
 
 from page_parser.abstractions import Marketplace
@@ -19,9 +20,8 @@ class Amazon(Marketplace):
         super().__init__(marketplace, logger)
 
         self._locale = "pt_BR"
-
-        # TODO: create a package to build urls to marketplaces
-        self._base_url = "https://www.amazon.com.br/dp/{0}"
+        self._url_parser = UrlParser(logger=logger)
+        self._url_builder = UrlBuilder(logger=logger)
 
     def parse(
         self, text: str, url: AnyHttpUrl
@@ -62,9 +62,7 @@ class Amazon(Marketplace):
         )
 
     def _get_code(self, url: str) -> str:
-        url_parser = UrlParser(self._logger)
-        url_parsed = url_parser.parse(url, self._marketplace)
-
+        url_parsed = self._url_parser.parse(url, self._marketplace)
         return url_parsed.code
 
     def _get_name(self, selector: Selector) -> str:
@@ -369,7 +367,12 @@ class Amazon(Marketplace):
                 variation_1_asin = variations_1_asin.get("asin")
 
                 if variation_1_asin:
-                    variations.append(self._base_url.format(variation_1_asin))
+                    variations.append(
+                        self._url_builder.build_sku_url(
+                            variation_1_asin,
+                            self._marketplace,
+                        )
+                    )
 
         variations_2_scripts = [s for s in scripts if "var dataToReturn =" in s]
         variations_2_scripts = [
@@ -388,6 +391,11 @@ class Amazon(Marketplace):
             variations_2_asins = [v for v in variations_2_js.values()]
 
             for variations_2_asin in variations_2_asins:
-                variations.append(self._base_url.format(variations_2_asin))
+                variations.append(
+                    self._url_builder.build_sku_url(
+                        variations_2_asin,
+                        self._marketplace,
+                    )
+                )
 
         return variations
