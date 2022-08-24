@@ -5,7 +5,7 @@ from collections.abc import Generator
 import pyjson5
 from babel.numbers import parse_decimal
 from la_deep_get import dget
-from page_models import SKU, Attribute, Price, Rating
+from page_models import SKU, Attribute, Metadata, Price, Rating
 from parsel import Selector, SelectorList
 from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
@@ -26,23 +26,60 @@ class Amazon(Marketplace):
     def parse(
         self, text: str, url: AnyHttpUrl
     ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
-        url_parser = UrlParser(self._logger)
         selector = Selector(text=text)
+        scripts: list[str] = selector.xpath(
+            "//script[@type='text/javascript']"
+        ).getall()
 
+        code = self._get_code(url=url)
+        name = self._get_name(selector=selector)
+        brand = self._get_brand(selector=selector)
+        description = self._get_description(selector=selector)
+        prices = self._get_prices(selector=selector)
+        segments = self._get_segments(selector=selector)
+        attributes = self._get_attributes(selector=selector)
+        rating = self._get_rating(selector=selector)
+        images = self._get_images(scripts=scripts)
+        videos = self._get_videos(scripts=scripts)
+        variations = self._get_variations(scripts=scripts)
+
+        yield SKU(
+            code=code,
+            marketplace=self._marketplace,
+            name=name,
+            brand=brand,
+            description=description,
+            prices=prices,
+            segments=segments,
+            attributes=attributes,
+            rating=rating,
+            images=images,
+            videos=videos,
+            variations=variations,
+            metadata=Metadata(
+                sources=[url],
+            ),
+        )
+
+    def _get_code(self, url: str) -> str:
+        url_parser = UrlParser(self._logger)
         url_parsed = url_parser.parse(url, self._marketplace)
-        code = url_parsed.code
-        name = selector.xpath("//span[@id='productTitle']//text()").get()
 
-        ###### BRAND
+        return url_parsed.code
 
+    def _get_name(self, selector: Selector) -> str:
+        return selector.xpath("//span[@id='productTitle']//text()").get()
+
+    def _get_brand(self, selector: Selector) -> str | None:
         brand: str | None = selector.xpath("//a[@id='bylineInfo']/text()").get()
 
         if brand:
             brand = brand.replace("Visite a loja ", "")
             brand = brand.replace("Marca: ", "")
 
-        ###### DESCRIPTION
+        return brand
 
+    def _get_description(self, selector: Selector) -> str | None:
         descriptions: list[str] = []
 
         description_1 = selector.xpath(
@@ -76,8 +113,9 @@ class Amazon(Marketplace):
         descriptions = [d for d in descriptions if d]
         description = "\n".join(descriptions) or None
 
-        ###### PRICE
+        return description
 
+    def _get_prices(self, selector: Selector) -> list[Price]:
         currencies: list[str] = selector.xpath(
             "//span[@class='a-price-symbol']//text()"
         ).getall()
@@ -87,22 +125,22 @@ class Amazon(Marketplace):
 
         prices = []
 
-        price_1_whole = selector.xpath(
+        price_1_whole: str | None = selector.xpath(
             "//div[@id='corePrice_feature_div']//span[@class='a-price-whole']//text()"
         ).get()
-        price_1_fraction = selector.xpath(
+        price_1_fraction: str | None = selector.xpath(
             "//span[@class='a-price-fraction']//text()"
         ).get()
         price_1_parts = [price_1_whole, price_1_fraction]
         price_1_parts = [p for p in price_1_parts if p]
 
-        if price_1_whole and price_1_parts:
+        if price_1_whole:
             price_1 = ",".join(price_1_parts)
             price_1 = parse_decimal(price_1, locale=self._locale)
             price_1 = Price(amount=price_1, currency=currency)
             prices.append(price_1)
 
-        price_2_secondary = selector.xpath(
+        price_2_secondary: str | None = selector.xpath(
             "//span[@data-a-color='secondary']/span/text()"
         ).get()
 
@@ -112,7 +150,7 @@ class Amazon(Marketplace):
             price_2 = Price(amount=price_2, currency=currency)
             prices.append(price_2)
 
-        price_3_range = selector.xpath(
+        price_3_range: list[str] = selector.xpath(
             "//div[@id='apex_desktop']//span[contains(@class, 'apexPriceToPay')]/span[@class='a-offscreen']/text()"
         ).getall()
 
@@ -123,8 +161,9 @@ class Amazon(Marketplace):
             price_3 = Price(amount=price_3, currency=currency)
             prices.append(price_3)
 
-        ###### SEGMENTS
+        return prices
 
+    def _get_segments(self, selector: Selector) -> list[str]:
         segments: list[str] = selector.xpath(
             "//div[contains(@class, 'a-breadcrumb')]//text()"
         ).getall()
@@ -135,10 +174,11 @@ class Amazon(Marketplace):
         # Quando é um resultado de busca os segmentos não aparecem,
         # em vez disso tem um "‹ Voltar aos resultados"
         if "‹" in segments:
-            segments = []
+            return []
 
-        ###### ATTRIBUTES
+        return segments
 
+    def _get_attributes(self, selector: Selector) -> list[Attribute]:
         attributes = []
 
         attributes_1_tr = selector.xpath("//div[@id='productOverview_feature_div']//tr")
@@ -214,8 +254,9 @@ class Amazon(Marketplace):
             attribute_5 = Attribute(name=attribute_5_name, value=attribute_5_value)
             attributes.append(attribute_5)
 
-        ###### RATING
+        return attributes
 
+    def _get_rating(self, selector: Selector) -> Rating:
         rating = Rating(min=1, max=5)
 
         rating_span: str = selector.xpath(
@@ -226,15 +267,12 @@ class Amazon(Marketplace):
             rating_span = rating_span.partition(" de 5")[0]
             rating_span = rating_span.strip()
             rating_current = parse_decimal(rating_span, locale=self._locale)
-            rating.curent = rating_current
+            rating.current = rating_current
 
-        ###### IMAGES
+        return rating
 
+    def _get_images(self, scripts: list[str]) -> list[str]:
         images = []
-
-        scripts: list[str] = selector.xpath(
-            "//script[@type='text/javascript']"
-        ).getall()
 
         images_1_scripts = [s for s in scripts if "'colorImages': " in s]
         images_1_scripts = [s.split("'colorImages':")[1] for s in images_1_scripts]
@@ -253,8 +291,7 @@ class Amazon(Marketplace):
 
             for image_1_main in images_1_main:
                 for image_1_url in image_1_main:
-                    # The url last number is the size
-                    # and it's customizable
+                    # The url last number is the size and it's customizable
                     image_1_url = re.sub(r"[0-9]+_\.jpg", "9999_.jpg", image_1_url)
                     images.append(image_1_url)
 
@@ -278,8 +315,9 @@ class Amazon(Marketplace):
             for image_2_url in images_2_json:
                 images.append(image_2_url)
 
-        ###### VIDEOS
+        return images
 
+    def _get_videos(self, scripts: list[str]) -> list[str]:
         videos = []
 
         videos_scripts = [s for s in scripts if "jQuery.parseJSON('{\"dataInJson" in s]
@@ -301,8 +339,9 @@ class Amazon(Marketplace):
             for video_url in videos_urls:
                 videos.append(video_url)
 
-        ###### VARIATIONS
+        return videos
 
+    def _get_variations(self, scripts: list[str]) -> list[str]:
         variations = []
 
         variations_1_scripts = [
@@ -351,18 +390,4 @@ class Amazon(Marketplace):
             for variations_2_asin in variations_2_asins:
                 variations.append(self._base_url.format(variations_2_asin))
 
-        yield SKU(
-            code=code,
-            name=name,
-            brand=brand,
-            description=description,
-            prices=prices,
-            segments=segments,
-            attributes=attributes,
-            rating=rating,
-            images=images,
-            videos=videos,
-            variations=variations,
-            sources=[url],
-            marketplace=self._marketplace,
-        )
+        return variations

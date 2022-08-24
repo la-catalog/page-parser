@@ -18,7 +18,9 @@ class TestRihappy(TestCase):
         for file in Path(f"tests/{self.marketplace}").iterdir():
             text = file.read_text()
             url = self.url.format(file.stem)
-            items = self.parser.parse(text=text, url=url, marketplace=self.marketplace)
+            items = self.parser.parse_sku(
+                text=text, url=url, marketplace=self.marketplace
+            )
 
             for item in items:
                 pprint(item.dict())
@@ -28,7 +30,7 @@ class TestRihappy(TestCase):
         file = Path(f"tests/{self.marketplace}/{filename}")
         text = file.read_text()
         url = self.url.format(file.stem)
-        items = self.parser.parse(text=text, url=url, marketplace=self.marketplace)
+        items = self.parser.parse_sku(text=text, url=url, marketplace=self.marketplace)
 
         for item in items:
             pprint(item.dict())
