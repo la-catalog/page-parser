@@ -5,11 +5,22 @@ from babel.numbers import parse_decimal
 from la_deep_get import dget
 from page_models import SKU, Attribute, Measurement, Price
 from pydantic import AnyHttpUrl
+from structlog.stdlib import BoundLogger
 
 from page_parser.abstractions import Marketplace
 
 
 class MercadoLivre(Marketplace):
+    def __init__(self, marketplace: str, logger: BoundLogger) -> None:
+        super().__init__(marketplace, logger)
+
+        self._description_endpoint = (
+            "https://api.mercadolibre.com/items/{0}/description"
+        )
+        self._currency_endpoint = "https://api.mercadolibre.com/currencies/{0}"
+        self._category_endpoint = "https://api.mercadolibre.com/categories/{0}"
+        self._picture_endpoint = "https://api.mercadolibre.com/pictures/{0}"
+
     def parse(
         self, text: str, url: AnyHttpUrl
     ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
@@ -21,8 +32,7 @@ class MercadoLivre(Marketplace):
 
         description = None
 
-        description_endpoint = "https://api.mercadolibre.com/items/{0}/description"
-        description_url = description_endpoint.format(json_["id"])
+        description_url = self._description_endpoint.format(json_["id"])
         description_text = yield AnyHttpUrl(description_url)
 
         if description_text:
@@ -34,8 +44,7 @@ class MercadoLivre(Marketplace):
         prices = []
 
         if currency_id := json_.get("currency_id"):
-            currency_endpoint = "https://api.mercadolibre.com/currencies/{0}"
-            currency_url = currency_endpoint.format(currency_id)
+            currency_url = self._currency_endpoint.format(currency_id)
             currency_text = yield AnyHttpUrl(url=currency_url)
 
             if currency_text:
@@ -55,8 +64,7 @@ class MercadoLivre(Marketplace):
         segments = []
 
         if category_id := json_.get("category_id"):
-            category_endpoint = "https://api.mercadolibre.com/categories/{0}"
-            category_url = category_endpoint.format(category_id)
+            category_url = self._category_endpoint.format(category_id)
             category_text = yield AnyHttpUrl(category_url)
 
             if category_text:
@@ -104,10 +112,9 @@ class MercadoLivre(Marketplace):
         ###### IMAGES
 
         images = []
-        picture_endpoint = "https://api.mercadolibre.com/pictures/{0}"
 
         for picture in json_.get("pictures", default=[]):
-            picture_url = picture_endpoint.format(picture["id"])
+            picture_url = self._picture_endpoint.format(picture["id"])
             picture_text = yield AnyHttpUrl(picture_url)
 
             if picture_text:
