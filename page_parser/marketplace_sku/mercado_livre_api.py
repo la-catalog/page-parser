@@ -4,13 +4,14 @@ from collections.abc import Generator
 from babel.numbers import parse_decimal
 from la_deep_get import dget
 from page_models import SKU, Attribute, Measurement, Price
+from page_models.sku.metadata import Metadata
 from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
 
 from page_parser.abstractions import Marketplace
 
 
-class MercadoLivre(Marketplace):
+class MercadoLivreAPI(Marketplace):
     def __init__(self, marketplace: str, logger: BoundLogger) -> None:
         super().__init__(marketplace, logger)
 
@@ -26,10 +27,29 @@ class MercadoLivre(Marketplace):
     ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
         json_: dict = json.loads(text)
 
+        code = json_.get("id")
         name = json_.get("title")
+        description = self._get_description(json_)
+        prices = self._get_prices(json_)
+        segments = self._get_segments(json_)
+        attributes = self._get_attributes(json_)
+        package = self._get_package(json_)
+        images = self._get_images(json_)
 
-        ###### DESCRIPTION
+        yield SKU(
+            code=code,
+            marketplace=self._marketplace,
+            name=name,
+            description=description,
+            prices=prices,
+            segments=segments,
+            attributes=attributes,
+            package=package,
+            images=images,
+            metadata=Metadata(sources=[url]),
+        )
 
+    def _get_description(self, json_: dict) -> str | None:
         description = None
 
         description_url = self._description_endpoint.format(json_["id"])
@@ -39,8 +59,9 @@ class MercadoLivre(Marketplace):
             description_json: dict = json.loads(description_text)
             description = description_json.get("plain_text")
 
-        ###### PRICES
+        return description
 
+    def _get_prices(self, json_: dict) -> list[Price]:
         prices = []
 
         if currency_id := json_.get("currency_id"):
@@ -59,8 +80,9 @@ class MercadoLivre(Marketplace):
                 if price_2:
                     prices.append(Price(amount=price_2, currency=currency))
 
-        ###### SEGMENTS
+        return prices
 
+    def _get_segments(self, json_: dict) -> list[str]:
         segments = []
 
         if category_id := json_.get("category_id"):
@@ -75,8 +97,9 @@ class MercadoLivre(Marketplace):
 
         segments = [s for s in segments if s]
 
-        ###### ATTRIBUTES
+        return segments
 
+    def _get_attributes(self, json_: dict) -> list[Attribute]:
         attributes = []
 
         for attribute in json_.get("attributes"):
@@ -85,8 +108,9 @@ class MercadoLivre(Marketplace):
             attribute_value = attribute.get("value_name")
             attributes.append(Attribute(name=attribute_name, value=attribute_value))
 
-        ###### PACKAGE
+        return attributes
 
+    def _get_package(self, json_: dict) -> Measurement:
         package = Measurement()
         package_dimensions: str = dget(json_, "shipping", "dimensions")
 
@@ -109,8 +133,9 @@ class MercadoLivre(Marketplace):
             if package_height := dget(package_LWH, 2):
                 package.height = parse_decimal(package_height)
 
-        ###### IMAGES
+        return package
 
+    def _get_images(self, json_: dict) -> list[str]:
         images = []
 
         for picture in json_.get("pictures", default=[]):
@@ -131,13 +156,4 @@ class MercadoLivre(Marketplace):
 
         images = [i for i in images if i]
 
-        yield SKU(
-            name=name,
-            description=description,
-            attributes=attributes,
-            prices=prices,
-            segments=segments,
-            attributes=attributes,
-            package=package,
-            images=images,
-        )
+        return images

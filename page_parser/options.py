@@ -4,9 +4,11 @@ from page_parser import marketplace_sku
 from page_parser.abstractions import Marketplace
 from page_parser.exceptions import UnknowMarketplaceError
 from page_parser.marketplace_search.rihappy import Rihappy as SearchRihappy
-from page_parser.marketplace_sku import rihappy
 from page_parser.marketplace_sku.amazon import Amazon as SKUAmazon
 from page_parser.marketplace_sku.amazon_pt import AmazonPT as SKUAmazonPT
+from page_parser.marketplace_sku.mercado_livre_api import (
+    MercadoLivreAPI as SKUMercadoLivreAPI,
+)
 from page_parser.marketplace_sku.rihappy import Rihappy as SKURihappy
 
 search_options: dict[str, type[Marketplace]] = {
@@ -17,6 +19,7 @@ sku_options: dict[str, type[Marketplace]] = {
     "rihappy": SKURihappy,
     "amazon": SKUAmazon,
     "amazon_pt": SKUAmazonPT,
+    "mercado_livre": SKUMercadoLivreAPI,
 }
 
 

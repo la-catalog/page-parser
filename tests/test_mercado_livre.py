@@ -9,7 +9,7 @@ from page_parser.parser import Parser
 class TestRihappy(TestCase):
     def setUp(self) -> None:
         self.parser = Parser()
-        self.marketplace = "rihappy"
+        self.marketplace = "mercado_livre"
         self.url = "https://api.mercadolibre.com/items/{0}"
 
         return super().setUp()
