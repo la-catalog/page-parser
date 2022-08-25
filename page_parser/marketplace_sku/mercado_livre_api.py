@@ -3,7 +3,7 @@ from collections.abc import Generator
 
 from babel.numbers import parse_decimal
 from la_deep_get import dget
-from page_models import SKU, Attribute, Measurement, Price
+from page_models import SKU, AnURL, Attribute, Measurement, Price
 from page_models.sku.metadata import Metadata
 from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
@@ -29,12 +29,37 @@ class MercadoLivreAPI(Marketplace):
 
         code = json_.get("id")
         name = json_.get("title")
-        description = self._get_description(json_)
-        prices = self._get_prices(json_)
-        segments = self._get_segments(json_)
+
+        try:
+            gen = self._get_description(json_)
+            text = yield gen.send(None)
+            gen.send(text)
+        except StopIteration as e:
+            description = e.value
+
+        try:
+            gen = self._get_prices(json_)
+            text = yield gen.send(None)
+            gen.send(text)
+        except StopIteration as e:
+            prices = e.value
+
+        try:
+            gen = self._get_segments(json_)
+            text = yield gen.send(None)
+            gen.send(text)
+        except StopIteration as e:
+            segments = e.value
+
         attributes = self._get_attributes(json_)
         package = self._get_package(json_)
-        images = self._get_images(json_)
+
+        try:
+            gen = self._get_images(json_)
+            text = yield gen.send(None)
+            gen.send(text)
+        except StopIteration as e:
+            images = e.value
 
         yield SKU(
             code=code,
@@ -49,11 +74,11 @@ class MercadoLivreAPI(Marketplace):
             metadata=Metadata(sources=[url]),
         )
 
-    def _get_description(self, json_: dict) -> str | None:
+    def _get_description(self, json_: dict) -> Generator[AnURL, str, str]:
         description = None
 
         description_url = self._description_endpoint.format(json_["id"])
-        description_text = yield AnyHttpUrl(description_url)
+        description_text = yield AnURL(url=description_url)
 
         if description_text:
             description_json: dict = json.loads(description_text)
@@ -66,7 +91,7 @@ class MercadoLivreAPI(Marketplace):
 
         if currency_id := json_.get("currency_id"):
             currency_url = self._currency_endpoint.format(currency_id)
-            currency_text = yield AnyHttpUrl(url=currency_url)
+            currency_text = yield AnURL(url=currency_url)
 
             if currency_text:
                 currency_json: dict = json.loads(currency_text)
@@ -87,7 +112,7 @@ class MercadoLivreAPI(Marketplace):
 
         if category_id := json_.get("category_id"):
             category_url = self._category_endpoint.format(category_id)
-            category_text = yield AnyHttpUrl(category_url)
+            category_text = yield AnURL(url=category_url)
 
             if category_text:
                 category_json: dict = json.loads(category_text)
@@ -138,9 +163,9 @@ class MercadoLivreAPI(Marketplace):
     def _get_images(self, json_: dict) -> list[str]:
         images = []
 
-        for picture in json_.get("pictures", default=[]):
+        for picture in json_.get("pictures", []):
             picture_url = self._picture_endpoint.format(picture["id"])
-            picture_text = yield AnyHttpUrl(picture_url)
+            picture_text = yield AnURL(url=picture_url)
 
             if picture_text:
                 picture_json: dict = json.loads(picture_text)

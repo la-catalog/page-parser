@@ -90,7 +90,7 @@ name = "page-models"
 version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/page-models.git"
-revision = "7de033c0b11a43e9512a860630a3a0e79c214afe"
+revision = "d908063f8872d3c5c73fb1fd10722647d4ac8181"
 summary = "UNKNOWN"
 dependencies = [
     "gtin>=1.3.1649173518",
@@ -202,7 +202,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:43f4072ec283beb57d63bdd0731f940e06d3e93506a625c57d2e3194913590c2"
+content_hash = "sha256:7e623b0ec428c3bcce55c813da6c20bc384fab4bff17e7cd093df3827e9953b6"
 
 [metadata.files]
 "babel 2.10.3" = [

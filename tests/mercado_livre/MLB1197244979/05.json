@@ -1,0 +1,99 @@
+{
+    "id": "820956-MLB51263592452_082022",
+    "max_size": "1200x844",
+    "dominant_color": "255,255,255",
+    "crop": {
+        "x_offset": null,
+        "x_size": null,
+        "y_offset": null,
+        "y_size": null
+    },
+    "variations": [
+        {
+            "size": "1200x844",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-F.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-F.jpg"
+        },
+        {
+            "size": "500x351",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-O.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-O.jpg"
+        },
+        {
+            "size": "400x400",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-C.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-C.jpg"
+        },
+        {
+            "size": "320x320",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-V.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-V.jpg"
+        },
+        {
+            "size": "280x280",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-E.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-E.jpg"
+        },
+        {
+            "size": "250x250",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-P.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-P.jpg"
+        },
+        {
+            "size": "228x160",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-A.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-A.jpg"
+        },
+        {
+            "size": "210x210",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-Y.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-Y.jpg"
+        },
+        {
+            "size": "200x200",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-N.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-N.jpg"
+        },
+        {
+            "size": "160x160",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-T.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-T.jpg"
+        },
+        {
+            "size": "160x160",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-Z.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-Z.jpg"
+        },
+        {
+            "size": "120x120",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-G.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-G.jpg"
+        },
+        {
+            "size": "90x90",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-I.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-I.jpg"
+        },
+        {
+            "size": "90x90",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-S.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-S.jpg"
+        },
+        {
+            "size": "70x70",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-R.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-R.jpg"
+        },
+        {
+            "size": "40x40",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-M.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-M.jpg"
+        },
+        {
+            "size": "800x800",
+            "secure_url": "https://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-B.jpg",
+            "url": "http://http2.mlstatic.com/D_NQ_NP_820956-MLB51263592452_082022-B.jpg"
+        }
+    ],
+    "status": "ACTIVE"
+}
