@@ -90,7 +90,7 @@ name = "page-models"
 version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/page-models.git"
-revision = "d908063f8872d3c5c73fb1fd10722647d4ac8181"
+revision = "3ea932812d5631cc698354cb466bf997e229e3f8"
 summary = "UNKNOWN"
 dependencies = [
     "gtin>=1.3.1649173518",
@@ -176,7 +176,7 @@ name = "url-builder"
 version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/url-builder.git"
-revision = "c20ccd09656856b6ff517411a013150d02b566c8"
+revision = "78664a3ad39ebfdba425a74eafa8d3fe761dce1f"
 summary = ""
 
 [[package]]
@@ -202,7 +202,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:7e623b0ec428c3bcce55c813da6c20bc384fab4bff17e7cd093df3827e9953b6"
+content_hash = "sha256:992f11beaaaa1498380222ba007e8ce406e8cf438eabaa3a5860a312758fe444"
 
 [metadata.files]
 "babel 2.10.3" = [

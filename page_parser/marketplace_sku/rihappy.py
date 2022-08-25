@@ -3,6 +3,7 @@ from collections.abc import Generator
 
 from la_deep_get import dget
 from page_models import SKU, Attribute, Price
+from page_models.sku.metadata import Metadata
 from parsel import Selector
 from pydantic import AnyHttpUrl
 
@@ -73,13 +74,13 @@ class Rihappy(Marketplace):
 
         yield SKU(
             code=code,
+            marketplace=self._marketplace,
             name=name,
             brand=brand,
             description=description,
             prices=prices,
             segments=segments,
             attributes=attributes,
-            sources=[url],
-            marketplace=self._marketplace,
             images=images,
+            metadata=Metadata(sources=[url]),
         )

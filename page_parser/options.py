@@ -19,7 +19,7 @@ sku_options: dict[str, type[Marketplace]] = {
     "rihappy": SKURihappy,
     "amazon": SKUAmazon,
     "amazon_pt": SKUAmazonPT,
-    "mercado_livre": SKUMercadoLivreAPI,
+    "mercado_livre_api": SKUMercadoLivreAPI,
 }
 
 
