@@ -29,37 +29,12 @@ class MercadoLivreAPI(Marketplace):
 
         code = json_.get("id")
         name = json_.get("title")
-
-        try:
-            gen = self._get_description(json_)
-            text = yield gen.send(None)
-            gen.send(text)
-        except StopIteration as e:
-            description = e.value
-
-        try:
-            gen = self._get_prices(json_)
-            text = yield gen.send(None)
-            gen.send(text)
-        except StopIteration as e:
-            prices = e.value
-
-        try:
-            gen = self._get_segments(json_)
-            text = yield gen.send(None)
-            gen.send(text)
-        except StopIteration as e:
-            segments = e.value
-
+        description = yield from self._get_description(json_)
+        prices = yield from self._get_prices(json_)
+        segments = yield from self._get_segments(json_)
         attributes = self._get_attributes(json_)
         package = self._get_package(json_)
-
-        try:
-            gen = self._get_images(json_)
-            text = yield gen.send(None)
-            gen.send(text)
-        except StopIteration as e:
-            images = e.value
+        images = yield from self._get_images(json_)
 
         yield SKU(
             code=code,
@@ -86,7 +61,7 @@ class MercadoLivreAPI(Marketplace):
 
         return description
 
-    def _get_prices(self, json_: dict) -> list[Price]:
+    def _get_prices(self, json_: dict) -> Generator[AnURL, str, list[Price]]:
         prices = []
 
         if currency_id := json_.get("currency_id"):
@@ -107,7 +82,7 @@ class MercadoLivreAPI(Marketplace):
 
         return prices
 
-    def _get_segments(self, json_: dict) -> list[str]:
+    def _get_segments(self, json_: dict) -> Generator[AnURL, str, list[str]]:
         segments = []
 
         if category_id := json_.get("category_id"):
@@ -160,7 +135,7 @@ class MercadoLivreAPI(Marketplace):
 
         return package
 
-    def _get_images(self, json_: dict) -> list[str]:
+    def _get_images(self, json_: dict) -> Generator[AnURL, str, list[str]]:
         images = []
 
         for picture in json_.get("pictures", []):

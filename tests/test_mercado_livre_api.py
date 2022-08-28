@@ -15,11 +15,12 @@ class TestRihappy(TestCase):
         self._parser = Parser()
         self._builder = Builder()
         self._marketplace = "mercado_livre_api"
+        self._dir = f"tests/{self._marketplace}"
 
         return super().setUp()
 
     def test_parse(self) -> None:
-        for file in Path(f"tests/{self._marketplace}").iterdir():
+        for file in Path(self._dir).iterdir():
             if file.is_dir():
                 self._parse_directory(file)
             else:
@@ -28,12 +29,10 @@ class TestRihappy(TestCase):
     def _parse_file(self, file: Path) -> None:
         text = file.read_text()
         url = self._builder.build_sku_url(file.stem, self._marketplace)
-        generator = self._parser.parse_sku(
-            text=text, url=url, marketplace=self._marketplace
-        )
+        skus = self._parser.parse_sku(text=text, url=url, marketplace=self._marketplace)
 
-        for item in generator:
-            pprint(item.dict())
+        for sku in skus:
+            pprint(sku.dict())
 
     def _parse_directory(self, directory: Path) -> None:
         url = self._builder.build_sku_url(directory.name, self._marketplace)
@@ -41,20 +40,16 @@ class TestRihappy(TestCase):
         generator: Generator[SKU | AnURL, tuple[str, AnURL], None] = None
 
         for file in files:
-            text = file.read_text()
-
             if not generator:
                 generator = self._parser.parse_sku(
-                    text=text, url=url, marketplace=self._marketplace
+                    text=file.read_text(), url=url, marketplace=self._marketplace
                 )
                 item = generator.send(None)
             else:
-                item = generator.send(text)
+                item = generator.send(file.read_text())
 
             if isinstance(item, SKU):
                 pprint(item.dict())
-            elif isinstance(item, AnURL):
-                url = item.url
 
 
 if __name__ == "__main__":
