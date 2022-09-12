@@ -25,6 +25,7 @@ repository = "https://github.com/la-catalog/page-parser"
 
 [tool.pdm.scripts]
 unittest = "python -m unittest discover -v -f -s tests"
+black = "python -m black ."
 isort = "python -m isort -v --ac ."
 
 [tool.pdm.dev-dependencies]
