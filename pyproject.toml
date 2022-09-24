@@ -7,12 +7,12 @@ authors = [
     {name = "thiagola92", email = "thiagola92@gmail.com"},
 ]
 dependencies = [
-    "Babel>=2.10.3",
-    "la-catch>=0.0.5",
-    "la-deep-get>=0.0.3",
-    "parsel>=1.6.0",
-    "pyjson5>=1.6.1",
-    "structlog>=22.1.0",
+    "Babel==2.10.3",
+    "la-catch==0.0.6",
+    "la-deep-get==0.0.6",
+    "parsel==1.6.0",
+    "pyjson5==1.6.2",
+    "structlog==22.1.0",
     "url-parser @ git+https://github.com/la-catalog/url-parser.git",
     "page-models @ git+https://github.com/la-catalog/page-models.git",
     "url-builder @ git+https://github.com/la-catalog/url-builder.git",
@@ -21,6 +21,7 @@ dependencies = [
 [project.urls]
 repository = "https://github.com/la-catalog/page-parser"
 
+[project.optional-dependencies]
 [tool.pdm]
 
 [tool.pdm.scripts]
@@ -30,8 +31,8 @@ isort = "python -m isort -v --ac ."
 
 [tool.pdm.dev-dependencies]
 lint = [
-    "black",
-    "isort"
+    "black==22.8.0",
+    "isort==5.10.1",
 ]
 
 [build-system]

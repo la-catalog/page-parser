@@ -90,12 +90,12 @@ name = "page-models"
 version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/page-models.git"
-revision = "2bb51cf242af412f8ce43579501b38e2fb7f2650"
+revision = "e4316bce8fa7833aa40f8fe1f7a510a8718e73d2"
 summary = ""
 dependencies = [
-    "gtin>=1.3.1649173518",
-    "motor>=3.0.0",
-    "pydantic>=1.9.1",
+    "gtin==1.3.1649173518",
+    "motor==3.0.0",
+    "pydantic==1.10.2",
 ]
 
 [[package]]
@@ -176,7 +176,7 @@ name = "url-builder"
 version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/url-builder.git"
-revision = "08ced6b33633bb4e34db3493cba90584e3faf80f"
+revision = "4572e86c6dc54ed9d4a55ae2cf2fa80af28e7d5d"
 summary = ""
 dependencies = [
     "pydantic>=1.9.2",
@@ -188,7 +188,7 @@ name = "url-parser"
 version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/url-parser.git"
-revision = "61c2a235fe6b11a17afe6b1aa377823802925de0"
+revision = "98e9974afbe26f884386c764a3b48eb0a69a136f"
 summary = ""
 dependencies = [
     "la-catch>=0.0.5",
@@ -206,7 +206,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:992f11beaaaa1498380222ba007e8ce406e8cf438eabaa3a5860a312758fe444"
+content_hash = "sha256:09226c7ae45979f7fb011558448aca6b8a2f9df23525ccd5d048488191a1f7a6"
 
 [metadata.files]
 "babel 2.10.3" = [
