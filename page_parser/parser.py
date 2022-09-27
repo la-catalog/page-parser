@@ -4,7 +4,7 @@ from page_models import SKU
 from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger, get_logger
 
-from page_parser.options import get_marketplace_sku_parser
+from page_parser.options.options import get_sku_parser
 
 
 class Parser:
@@ -29,8 +29,6 @@ class Parser:
     ) -> Generator[SKU | AnyHttpUrl, tuple[str, str], None]:
         """Call the parse function from the respective marketplace"""
 
-        parser = get_marketplace_sku_parser(
-            marketplace=marketplace, logger=self._logger
-        )
+        parser = get_sku_parser(marketplace=marketplace, logger=self._logger)
 
         return parser.parse(text=text, url=url)
