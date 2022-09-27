@@ -4,7 +4,7 @@ from pathlib import Path
 from pprint import pprint
 from unittest import TestCase
 
-from page_models import SKU, AnURL
+from page_models import SKU, URL
 from url_builder import Builder
 
 from page_parser.parser import Parser
@@ -37,7 +37,7 @@ class TestRihappy(TestCase):
     def _parse_directory(self, directory: Path) -> None:
         url = self._builder.build_sku_url(directory.name, self._marketplace)
         files = sorted(directory.iterdir())
-        generator: Generator[SKU | AnURL, tuple[str, AnURL], None] = None
+        generator: Generator[SKU | URL, tuple[str, URL], None] = None
 
         for file in files:
             if not generator:

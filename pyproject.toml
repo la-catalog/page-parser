@@ -14,8 +14,8 @@ dependencies = [
     "pyjson5==1.6.2",
     "structlog==22.1.0",
     "url-parser @ git+https://github.com/la-catalog/url-parser.git",
-    "page-models @ git+https://github.com/la-catalog/page-models.git",
     "url-builder @ git+https://github.com/la-catalog/url-builder.git",
+    "page-models @ git+https://github.com/la-catalog/page-models.git",
 ]
 
 [project.urls]
