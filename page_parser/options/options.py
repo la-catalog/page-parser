@@ -30,29 +30,3 @@ def get_marketplace_parser(
         raise UnknowMarketplaceError(
             f"Marketplace '{marketplace}' is not defined in page_parser package. Valid options: {valid}"
         ) from e
-
-
-def get_sku_parser(marketplace: str, logger: BoundLogger) -> Marketplace:
-    """
-    Get a SKU parser responsible for a marketplace.
-
-    Is a shortcut for calling `get_marketplace_parser`
-    when you want a SKU parser.
-    """
-
-    return get_marketplace_parser(
-        marketplace=marketplace, options=sku_options, logger=logger
-    )
-
-
-def get_search_parser(marketplace: str, logger: BoundLogger) -> Marketplace:
-    """
-    Get a search parser responsible for a marketplace.
-
-    Is a shortcut for calling `get_marketplace_parser`
-    when you want a search parser.
-    """
-
-    return get_marketplace_parser(
-        marketplace=marketplace, options=search_options, logger=logger
-    )
