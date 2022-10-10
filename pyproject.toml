@@ -12,9 +12,9 @@ dependencies = [
     "parsel==1.6.0",
     "pyjson5==1.6.2",
     "structlog==22.1.0",
-    "url-parser @ git+https://github.com/la-catalog/url-parser.git",
-    "url-builder @ git+https://github.com/la-catalog/url-builder.git",
-    "page-models @ git+https://github.com/la-catalog/page-models.git",
+    "page-models>=0.1.0",
+    "url-parser>=3.0.3",
+    "url-builder>=0.1.0",
 ]
 
 [project.urls]
