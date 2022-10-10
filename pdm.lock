@@ -162,10 +162,6 @@ requires_python = ">=3.10"
 git = "https://github.com/la-catalog/url-builder.git"
 revision = "8390530ed1b8e35fd775102f198dce4eb8689488"
 summary = ""
-dependencies = [
-    "pydantic==1.10.2",
-    "structlog==22.1.0",
-]
 
 [[package]]
 name = "url-parser"
@@ -175,9 +171,9 @@ git = "https://github.com/la-catalog/url-parser.git"
 revision = "95ff12672d0477d76b986ec87786fdb86d068784"
 summary = ""
 dependencies = [
-    "la-catch==0.0.6",
-    "pydantic==1.10.2",
-    "structlog==22.1.0",
+    "la-catch>=0.0.5",
+    "pydantic>=1.9.1",
+    "structlog>=22.1.0",
 ]
 
 [[package]]
@@ -190,7 +186,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:089b1d5e7a8df1f95c8ba42881df46de57fb6bb43b09537754cba88d73e38e51"
+content_hash = "sha256:21480fe313300c7a5ca6b938b638143a9f6bb50d34d750225fb03f573ef4165d"
 
 [metadata.files]
 "babel 2.10.3" = [
