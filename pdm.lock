@@ -190,7 +190,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:089b1d5e7a8df1f95c8ba42881df46de57fb6bb43b09537754cba88d73e38e51"
+content_hash = "sha256:21480fe313300c7a5ca6b938b638143a9f6bb50d34d750225fb03f573ef4165d"
 
 [metadata.files]
 "babel 2.10.3" = [
