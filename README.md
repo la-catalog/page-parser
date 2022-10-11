@@ -4,7 +4,7 @@ Use esse pacote para extrair informações de um tet (HTML/JSON).
 Não existe regra sobre o que usar para extrair as informações, então use a ferramenta que preferir (parsel/cssselect/beautifulsoup).  
 
 # install
-`pdm add git+https://github.com/la-catalog/page-parser.git`  
+`pdm add page-parser`  
 
 # usage
 
