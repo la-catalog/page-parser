@@ -1,5 +1,5 @@
 # page-parser
-Use esse pacote para extrair informações de um texot (HTML/JSON).  
+Use esse pacote para extrair informações de um texto (HTML/JSON).  
 
 Não existe regra sobre o que usar para extrair as informações, então use a ferramenta que preferir (parsel/cssselect/beautifulsoup).  
 
