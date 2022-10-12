@@ -177,8 +177,14 @@ summary = ""
 
 [[package]]
 name = "url-parser"
-version = "3.0.3"
-summary = "Parse url and get all the different parts out of it"
+version = "0.1.0"
+requires_python = ">=3.10"
+summary = ""
+dependencies = [
+    "la-catch>=0.0.5",
+    "pydantic>=1.9.1",
+    "structlog>=22.1.0",
+]
 
 [[package]]
 name = "w3lib"
@@ -190,7 +196,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:50020ef66c8ad3e5bd6b467c21db0804aa61c25a6c1288016d47f5b22de8f765"
+content_hash = "sha256:90257c520779d94c4921c4d82c1d36ce476f45c1b31a46f45ed16b4c2850bb8a"
 
 [metadata.files]
 "babel 2.10.3" = [
@@ -569,10 +575,6 @@ content_hash = "sha256:50020ef66c8ad3e5bd6b467c21db0804aa61c25a6c1288016d47f5b22
 "typing-extensions 4.3.0" = [
     {url = "https://files.pythonhosted.org/packages/9e/1d/d128169ff58c501059330f1ad96ed62b79114a2eb30b8238af63a2e27f70/typing_extensions-4.3.0.tar.gz", hash = "sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6"},
     {url = "https://files.pythonhosted.org/packages/ed/d6/2afc375a8d55b8be879d6b4986d4f69f01115e795e36827fd3a40166028b/typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02"},
-]
-"url-parser 3.0.3" = [
-    {url = "https://files.pythonhosted.org/packages/7d/3f/bdc0f4b789f7f9d893bca5bfb80579c4d4e80c19f28d39e4a8fbeb9344a1/url_parser-3.0.3-py3-none-any.whl", hash = "sha256:0eaec4f935297b72ffffc2fe2baabd4f6a469189b7b56446e7243b0bc371a963"},
-    {url = "https://files.pythonhosted.org/packages/7f/96/e75d719350fbbbba3fbc7b85f6d960c06367f7201a256bab7f0b4fa966bc/url_parser-3.0.3.tar.gz", hash = "sha256:402ffca6459e272fe91985a7d5f143731cb80236a3ff59322c0aa4cb8b97b0d2"},
 ]
 "w3lib 1.22.0" = [
     {url = "https://files.pythonhosted.org/packages/5e/2f/76558d2712d93e9267a3160190f1bb005f97ef4aba35592728f63747da8b/w3lib-1.22.0.tar.gz", hash = "sha256:0ad6d0203157d61149fd45aaed2e24f53902989c32fc1dccc2e2bfba371560df"},

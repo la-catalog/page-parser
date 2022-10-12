@@ -14,8 +14,8 @@ dependencies = [
     "pyjson5==1.6.2",
     "structlog==22.1.0",
     "page-models>=0.1.0",
-    "url-parser>=3.0.3",
     "url-builder>=0.1.0",
+    "url-parser>=0.1.0",
 ]
 
 [project.urls]
@@ -42,3 +42,10 @@ build-backend = "pdm.pep517.api"
 [[tool.pdm.source]]
 url = "https://la-catalog.github.io/pypi/simple/"
 name = "la-catalog"
+
+[[tool.pdm.source]]
+url = "https://pypi.org/simple"
+name = "pypi"
+
+[tool.pdm.resolution]
+respect-source-order = true
