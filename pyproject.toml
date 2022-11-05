@@ -7,13 +7,13 @@ authors = [
     {name = "thiagola92", email = "thiagola92@gmail.com"},
 ]
 dependencies = [
-    "Babel==2.10.3",
+    "Babel==2.11.0",
     "la-catch==0.0.6",
     "la-deep-get==0.0.6",
-    "parsel==1.6.0",
+    "parsel==1.7.0",
     "pyjson5==1.6.2",
     "structlog==22.1.0",
-    "page-models==0.1.0",
+    "page-models==0.2.0",
     "url-builder==0.1.0",
     "url-parser==0.1.0",
 ]

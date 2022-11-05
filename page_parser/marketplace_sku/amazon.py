@@ -5,9 +5,8 @@ from collections.abc import Generator
 import pyjson5
 from babel.numbers import parse_decimal
 from la_deep_get import dget
-from page_models import SKU, Attribute, Metadata, Price, Rating
+from page_models import SKU, URL, Attribute, Metadata, Price, Rating
 from parsel import Selector, SelectorList
-from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
 from url_builder import Builder as UrlBuilder
 from url_parser import Parser as UrlParser
@@ -23,9 +22,7 @@ class Amazon(Marketplace):
         self._url_parser = UrlParser(logger=logger)
         self._url_builder = UrlBuilder(logger=logger)
 
-    def parse(
-        self, text: str, url: AnyHttpUrl
-    ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
+    def parse(self, text: str, url: URL) -> Generator[SKU | URL, tuple[str, URL], None]:
         selector = Selector(text=text)
         scripts: list[str] = selector.xpath(
             "//script[@type='text/javascript']"
@@ -61,7 +58,7 @@ class Amazon(Marketplace):
             ),
         )
 
-    def _get_code(self, url: str) -> str:
+    def _get_code(self, url: URL) -> str:
         url_parsed = self._url_parser.parse(url, self._marketplace)
         return url_parsed.code
 

@@ -5,7 +5,6 @@ from babel.numbers import parse_decimal
 from la_deep_get import dget
 from page_models import SKU, URL, Attribute, Measurement, Price
 from page_models.sku.metadata import Metadata
-from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
 
 from page_parser.abstractions import Marketplace
@@ -22,9 +21,7 @@ class MercadoLivreAPI(Marketplace):
         self._category_endpoint = "https://api.mercadolibre.com/categories/{0}"
         self._picture_endpoint = "https://api.mercadolibre.com/pictures/{0}"
 
-    def parse(
-        self, text: str, url: AnyHttpUrl
-    ) -> Generator[SKU | AnyHttpUrl, tuple[str, AnyHttpUrl], None]:
+    def parse(self, text: str, url: URL) -> Generator[SKU | URL, tuple[str, URL], None]:
         json_: dict = json.loads(text)
 
         code = json_.get("id")

@@ -1,7 +1,6 @@
 from collections.abc import Generator
 
-from page_models import SKU
-from pydantic import AnyHttpUrl
+from page_models import SKU, URL
 from structlog.stdlib import BoundLogger, get_logger
 
 from page_parser.options.options import get_marketplace_parser
@@ -18,17 +17,17 @@ class Parser:
         self._logger = logger
 
     def _log_error(
-        self, text: str, url: str, marketplace: str, exception: Exception
+        self, text: str, url: URL, marketplace: str, exception: Exception
     ) -> None:
         self._logger.exception(
             event="Parser error",
-            url=url,
+            url=str(url),
             marketplace=marketplace,
         )
 
     def parse_sku(
-        self, text: str, url: str, marketplace: str
-    ) -> Generator[SKU | AnyHttpUrl, tuple[str, str], None]:
+        self, text: str, url: URL, marketplace: str
+    ) -> Generator[SKU | URL, tuple[str, URL], None]:
         """Call the parse function from the respective marketplace"""
 
         parser = get_marketplace_parser(
@@ -38,8 +37,8 @@ class Parser:
         return parser.parse(text=text, url=url)
 
     def parse_search(
-        self, text: str, url: str, marketplace: str
-    ) -> Generator[SKU | AnyHttpUrl, tuple[str, str], None]:
+        self, text: str, url: URL, marketplace: str
+    ) -> Generator[SKU | URL, tuple[str, URL], None]:
         """Call the parse function from the respective marketplace"""
 
         parser = get_marketplace_parser(
