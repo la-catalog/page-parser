@@ -8,7 +8,9 @@ Não existe regra sobre o que usar para extrair as informações, então use a f
 
 # usage
 
-### page_parser.Parser.parse(text, url)
+## Parser
+
+### parse(text, url)
 Deve se passar o texto que pode ser um HTML, JSON ou qualquer outra coisa desde que você assuma a responsabilidade de conseguir extrair dentro da configuração do seu marketplace. O URL também deve ser passado para conseguirmos montar links da página.  
 
 ```python
