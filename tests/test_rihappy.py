@@ -15,7 +15,7 @@ class TestRihappy(TestCase):
         self._parser = Parser()
         self._builder = Builder()
         self._marketplace = "rihappy"
-        self._dir = f"tests/{self._marketplace}"
+        self._dir = f"tests/res/{self._marketplace}"
 
         return super().setUp()
 

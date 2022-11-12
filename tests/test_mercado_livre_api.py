@@ -10,12 +10,12 @@ from url_builder import Builder
 from page_parser.parser import Parser
 
 
-class TestRihappy(TestCase):
+class TestMercadoLivre(TestCase):
     def setUp(self) -> None:
         self._parser = Parser()
         self._builder = Builder()
         self._marketplace = "mercado_livre_api"
-        self._dir = f"tests/{self._marketplace}"
+        self._dir = f"tests/res/{self._marketplace}"
 
         return super().setUp()
 

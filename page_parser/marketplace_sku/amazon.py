@@ -5,7 +5,7 @@ from collections.abc import Generator
 import pyjson5
 from babel.numbers import parse_decimal
 from la_deep_get import dget
-from page_models import SKU, URL, Attribute, Metadata, Price, Rating
+from page_models import SKU, URL, Attribute, Image, Metadata, Price, Rating, Video
 from parsel import Selector, SelectorList
 from structlog.stdlib import BoundLogger
 from url_builder import Builder as UrlBuilder
@@ -53,9 +53,7 @@ class Amazon(Marketplace):
             images=images,
             videos=videos,
             variations=variations,
-            metadata=Metadata(
-                sources=[url],
-            ),
+            metadata=Metadata(sources=[url]),
         )
 
     def _get_code(self, url: URL) -> str:
@@ -132,7 +130,7 @@ class Amazon(Marketplace):
         if price_1_whole:
             price_1 = ",".join(price_1_parts)
             price_1 = parse_decimal(price_1, locale=self._locale)
-            price_1 = Price(amount=price_1, currency=currency)
+            price_1 = Price(installments=[price_1], currency=currency)
             prices.append(price_1)
 
         price_2_secondary: str | None = selector.xpath(
@@ -142,7 +140,7 @@ class Amazon(Marketplace):
         if price_2_secondary and currency:
             price_2 = price_2_secondary.replace(currency, "")
             price_2 = parse_decimal(price_2, locale=self._locale)
-            price_2 = Price(amount=price_2, currency=currency)
+            price_2 = Price(installments=[price_2], currency=currency)
             prices.append(price_2)
 
         price_3_range: list[str] = selector.xpath(
@@ -153,7 +151,7 @@ class Amazon(Marketplace):
             price_3: str
             price_3 = price_3.replace(currency, "")
             price_3 = parse_decimal(price_3, locale=self._locale)
-            price_3 = Price(amount=price_3, currency=currency)
+            price_3 = Price(installments=[price_3], currency=currency)
             prices.append(price_3)
 
         return prices
@@ -288,7 +286,7 @@ class Amazon(Marketplace):
                 for image_1_url in image_1_main:
                     # The url last number is the size and it's customizable
                     image_1_url = re.sub(r"[0-9]+_\.jpg", "9999_.jpg", image_1_url)
-                    images.append(image_1_url)
+                    images.append(Image(url=image_1_url))
 
                     break  # No need to get all sizes from same image
 
@@ -308,7 +306,7 @@ class Amazon(Marketplace):
             images_2_json = [i for i in images_2_json if i]
 
             for image_2_url in images_2_json:
-                images.append(image_2_url)
+                images.append(Image(url=image_2_url))
 
         return images
 
@@ -332,7 +330,7 @@ class Amazon(Marketplace):
             videos_urls = [v for v in videos_urls if v]
 
             for video_url in videos_urls:
-                videos.append(video_url)
+                videos.append(Video(url=video_url))
 
         return videos
 
